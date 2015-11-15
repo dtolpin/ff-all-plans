@@ -836,9 +836,12 @@ Bool do_best_first_search( void )
 
   add_to_bfs_space( &ginitial_state, -1, NULL );
 
+  int ever_found = 0;
   while ( TRUE ) {
     if ( (first = lbfs_space_head->next) == NULL ) {
-      printf("\n\nbest first search space empty! problem proven unsolvable.\n\n");
+      if(!ever_found)
+	printf("\n\nbest first search space empty;"
+	       " problem proven unsolvable\n\n");
       longjmp(no_sol, 1);
     }
 
@@ -858,14 +861,12 @@ Bool do_best_first_search( void )
     }
 
     if ( first->h == 0 ) {
-      printf("\nSETTING NEXT\n");
+      ever_found = 1;
       if(!setjmp(next_sol)) {
 	extract_plan( first );
-	printf("\nJUMPING TO THIS\n");
 	longjmp(this_sol, 1);
       }
     } else {
-
       get_A( &(first->S) );
       for ( i = 0; i < gnum_A; i++ ) {
 	result_to_dest( &S, &(first->S), gA[i] );
@@ -879,6 +880,7 @@ Bool do_best_first_search( void )
 }
 
 
+Bool detect_transpositions = 1;
 
 void add_to_bfs_space( State *S, int op, BfsNode *father )
 
@@ -889,7 +891,7 @@ void add_to_bfs_space( State *S, int op, BfsNode *father )
 
   /* see if state is already a part of this search space
    */
-  if ( bfs_state_hashed( S ) ) {
+  if ( detect_transpositions && bfs_state_hashed( S ) ) {
     return;
   }
 

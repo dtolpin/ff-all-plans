@@ -722,10 +722,9 @@ int main( int argc, char *argv[] )
     }
 
   } else {
-    printf("\nSETTING THIS\n");
     if(setjmp(this_sol)) {
+      usleep(gcmd_line.sleep_msecs*1000);
       print_plan();
-      printf("\nJUMPING TO NEXT\n");
       longjmp(next_sol, 1);
     } else if(!setjmp(no_sol))
       do_best_first_search();
@@ -852,7 +851,9 @@ void ff_usage( void )
   printf("-p <str>    path for operator and fact file\n");
   printf("-o <str>    operator file name\n");
   printf("-f <str>    fact file name\n\n");
-  printf("-a <1/0>    find all plans (using best-first search)\n");
+  printf("-a <1/0>    find all plans using best-first search (0)\n");
+  printf("-t <1/0>    detect transpositions (1)\n");
+  printf("-s <num>    sleep (milliseconds) between plans\n");
   printf("-i <num>    run-time information level( preset: 1 )\n");
   printf("      0     only times\n");
   printf("      1     problem name, planning process infos\n");
@@ -934,10 +935,16 @@ Bool process_command_line( int argc, char *argv[] )
 	  strncpy( gcmd_line.fct_file_name, *argv, MAX_LENGTH );
 	  break;
 	case 'a': 
-	  sscanf( *argv, "%d", &gcmd_line.all_plans );
+	  sscanf( *argv, "%c", &gcmd_line.all_plans );
           break;
+	case 't':
+	  sscanf( *argv, "%c", &detect_transpositions );
+	  break;
 	case 'i':
 	  sscanf( *argv, "%d", &gcmd_line.display_info );
+	  break;
+	case 's':
+	  sscanf( *argv, "%d", &gcmd_line.sleep_msecs );
 	  break;
 	case 'd':
 	  sscanf( *argv, "%d", &gcmd_line.debug );

@@ -359,7 +359,8 @@ struct _command_line {
   char fct_file_name[MAX_LENGTH];
   int display_info;
   int debug;
-  int all_plans;
+  Bool all_plans;
+  int sleep_msecs;
 };
 
 
@@ -1474,6 +1475,10 @@ extern State gplan_states[MAX_PLAN_LENGTH + 1];
 /* jumping point for returning all solutions
  */
 extern jmp_buf this_sol, next_sol, no_sol;
+
+/* optionally detect transpositions
+ */
+extern Bool detect_transpositions;
 
 
 

@@ -760,7 +760,7 @@ void print_plan( void )
 
   int i, ef, j;
 
-  printf("\n\nff: found legal plan as follows");
+  printf("\n\033[2J\033[H\nff: found legal plan as follows");
   printf("\n\nstep ");
   for ( i = 0; i < gnum_plan_ops; i++ ) {
 /*     printf("\n\nnstate:"); */
