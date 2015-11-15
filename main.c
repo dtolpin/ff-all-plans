@@ -851,8 +851,8 @@ void ff_usage( void )
   printf("-p <str>    path for operator and fact file\n");
   printf("-o <str>    operator file name\n");
   printf("-f <str>    fact file name\n\n");
-  printf("-a <1/0>    find all plans using best-first search (0)\n");
-  printf("-t <1/0>    detect transpositions (1)\n");
+  printf("-a <bool>   find all plans using best-first search (0)\n");
+  printf("-t <bool>   detect transpositions (1)\n");
   printf("-s <num>    sleep (milliseconds) between plans\n");
   printf("-i <num>    run-time information level( preset: 1 )\n");
   printf("      0     only times\n");
