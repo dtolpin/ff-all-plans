@@ -808,11 +808,11 @@ Bool new_goal_gets_deleted( EhcNode *n )
 
 
 
-
+jmp_buf this_sol, next_sol, no_sol;
 
 Bool do_best_first_search( void )
-
 {
+  char placeholder[1 << 12];
 
   static Bool fc = TRUE;
   static State S;
@@ -839,7 +839,7 @@ Bool do_best_first_search( void )
   while ( TRUE ) {
     if ( (first = lbfs_space_head->next) == NULL ) {
       printf("\n\nbest first search space empty! problem proven unsolvable.\n\n");
-      return FALSE;
+      longjmp(no_sol, 1);
     }
 
     lbfs_space_head->next = first->next;
@@ -858,22 +858,24 @@ Bool do_best_first_search( void )
     }
 
     if ( first->h == 0 ) {
-      break;
-    }
+      printf("\nSETTING NEXT\n");
+      if(!setjmp(next_sol)) {
+	extract_plan( first );
+	printf("\nJUMPING TO THIS\n");
+	longjmp(this_sol, 1);
+      }
+    } else {
 
-    get_A( &(first->S) );
-    for ( i = 0; i < gnum_A; i++ ) {
-      result_to_dest( &S, &(first->S), gA[i] );
-      add_to_bfs_space( &S, gA[i], first );
-    }
+      get_A( &(first->S) );
+      for ( i = 0; i < gnum_A; i++ ) {
+	result_to_dest( &S, &(first->S), gA[i] );
+	add_to_bfs_space( &S, gA[i], first );
+      }
 
-    first->next = lbfs_space_had;
-    lbfs_space_had = first;
+      first->next = lbfs_space_had;
+      lbfs_space_had = first;
+    }
   }
-
-  extract_plan( first );
-  return TRUE;
-
 }
 
 

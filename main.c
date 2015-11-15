@@ -481,7 +481,7 @@ struct tms lstart, lend;
 
 
 
-
+char *N;
 
 int main( int argc, char *argv[] )
 
@@ -498,7 +498,7 @@ int main( int argc, char *argv[] )
 
   State current_start, current_end;
   int i, j;
-  Bool found_plan;
+  Bool found_plan = FALSE;
 
 
   times ( &lstart );
@@ -659,7 +659,7 @@ int main( int argc, char *argv[] )
 
   /***********************************************************
    * we are finally through with preprocessing and can worry *
-   * bout finding a plan instead.                            *
+   * about finding a plan instead.                            *
    ***********************************************************/
 
   times( &start );
@@ -670,10 +670,10 @@ int main( int argc, char *argv[] )
   compute_goal_agenda();
 
   /* make space in plan states info, and relax
-   */
+  */
   for ( i = 0; i < MAX_PLAN_LENGTH + 1; i++ ) {
-    make_state( &(gplan_states[i]), gnum_ft_conn );
-    gplan_states[i].max_F = gnum_ft_conn;
+      make_state( &(gplan_states[i]), gnum_ft_conn );
+      gplan_states[i].max_F = gnum_ft_conn;
   }
   make_state( &current_start, gnum_ft_conn );
   current_start.max_F = gnum_ft_conn;
@@ -682,35 +682,56 @@ int main( int argc, char *argv[] )
   initialize_relax();
 
 
-  source_to_dest( &(gplan_states[0]), &ginitial_state );
+  if(!gcmd_line.all_plans) {
 
-  source_to_dest( &current_start, &ginitial_state );
-  source_to_dest( &current_end, &(ggoal_agenda[0]) );
+    source_to_dest( &(gplan_states[0]), &ginitial_state );
 
-  for ( i = 0; i < gnum_goal_agenda; i++ ) {
-    if ( !do_enforced_hill_climbing( &current_start, &current_end ) ) {
-      break;
+    source_to_dest( &current_start, &ginitial_state );
+    source_to_dest( &current_end, &(ggoal_agenda[0]) );
+
+    for ( i = 0; i < gnum_goal_agenda; i++ ) {
+	if ( !do_enforced_hill_climbing( &current_start, &current_end ) ) {
+	    break;
+	}
+	source_to_dest( &current_start, &(gplan_states[gnum_plan_ops]) );
+	if ( i < gnum_goal_agenda - 1 ) {
+	    for ( j = 0; j < ggoal_agenda[i+1].num_F; j++ ) {
+		current_end.F[current_end.num_F++] = ggoal_agenda[i+1].F[j];
+	    }
+	}
     }
-    source_to_dest( &current_start, &(gplan_states[gnum_plan_ops]) );
-    if ( i < gnum_goal_agenda - 1 ) {
-      for ( j = 0; j < ggoal_agenda[i+1].num_F; j++ ) {
-	current_end.F[current_end.num_F++] = ggoal_agenda[i+1].F[j];
-      }
+    found_plan = ( i == gnum_goal_agenda ) ? TRUE : FALSE;
+    if ( !found_plan ) {
+      printf("\n\nEnforced Hill-climbing failed !");
+      printf("\nswitching to Best-first Search now.\n");
+      if(setjmp(this_sol))
+	found_plan = TRUE;
+      else if(setjmp(no_sol))
+	found_plan = FALSE;
+      else
+	do_best_first_search();
+      if(found_plan)
+	print_plan();
     }
-  }
-  found_plan = ( i == gnum_goal_agenda ) ? TRUE : FALSE;
 
-  if ( !found_plan ) {
-    printf("\n\nEnforced Hill-climbing failed !");
-    printf("\nswitching to Best-first Search now.\n");
-    found_plan = do_best_first_search();
-  }
+    times( &end );
+    TIME( gsearch_time );
 
-  times( &end );
-  TIME( gsearch_time );
+    if ( found_plan ) {
+      print_plan();
+    }
 
-  if ( found_plan ) {
-    print_plan();
+  } else {
+    printf("\nSETTING THIS\n");
+    if(setjmp(this_sol)) {
+      print_plan();
+      printf("\nJUMPING TO NEXT\n");
+      longjmp(next_sol, 1);
+    } else if(!setjmp(no_sol))
+      do_best_first_search();
+
+    times( &end );
+    TIME( gsearch_time );
   }
 
   output_planner_info();
@@ -719,7 +740,6 @@ int main( int argc, char *argv[] )
   exit( 0 );
 
 }
-
 
 
 
@@ -832,6 +852,7 @@ void ff_usage( void )
   printf("-p <str>    path for operator and fact file\n");
   printf("-o <str>    operator file name\n");
   printf("-f <str>    fact file name\n\n");
+  printf("-a <1/0>    find all plans (using best-first search)\n");
   printf("-i <num>    run-time information level( preset: 1 )\n");
   printf("      0     only times\n");
   printf("      1     problem name, planning process infos\n");
@@ -912,6 +933,9 @@ Bool process_command_line( int argc, char *argv[] )
 	case 'f':
 	  strncpy( gcmd_line.fct_file_name, *argv, MAX_LENGTH );
 	  break;
+	case 'a': 
+	  sscanf( *argv, "%d", &gcmd_line.all_plans );
+          break;
 	case 'i':
 	  sscanf( *argv, "%d", &gcmd_line.display_info );
 	  break;

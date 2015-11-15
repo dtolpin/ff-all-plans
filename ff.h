@@ -68,6 +68,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <ctype.h>
+#include <setjmp.h>
 #include <sys/types.h>
 #include <sys/timeb.h>
 #include <sys/times.h>
@@ -358,7 +359,7 @@ struct _command_line {
   char fct_file_name[MAX_LENGTH];
   int display_info;
   int debug;
-
+  int all_plans;
 };
 
 
@@ -1470,7 +1471,9 @@ extern int gnum_plan_ops;
 extern State gplan_states[MAX_PLAN_LENGTH + 1];
 
 
-
+/* jumping point for returning all solutions
+ */
+extern jmp_buf this_sol, next_sol, no_sol;
 
 
 

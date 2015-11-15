@@ -11,7 +11,7 @@ ADDONS	=
 
 CC      = gcc
 
-CFLAGS	= -O6 -Wall -g -ansi $(TYPE) $(ADDONS) 
+CFLAGS	= -O0 -Wall -g -ansi $(TYPE) $(ADDONS) 
 # -g -pg
 
 LIBS    = -lm
