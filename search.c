@@ -880,7 +880,7 @@ Bool do_best_first_search( void )
 }
 
 
-Bool detect_transpositions = 1;
+int detect_transpositions = 1;
 
 void add_to_bfs_space( State *S, int op, BfsNode *father )
 

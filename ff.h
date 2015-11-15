@@ -359,7 +359,7 @@ struct _command_line {
   char fct_file_name[MAX_LENGTH];
   int display_info;
   int debug;
-  Bool all_plans;
+  int all_plans;
   int sleep_msecs;
 };
 
@@ -1478,7 +1478,7 @@ extern jmp_buf this_sol, next_sol, no_sol;
 
 /* optionally detect transpositions
  */
-extern Bool detect_transpositions;
+extern int detect_transpositions;
 
 
 

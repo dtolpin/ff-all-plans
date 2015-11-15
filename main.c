@@ -935,10 +935,10 @@ Bool process_command_line( int argc, char *argv[] )
 	  strncpy( gcmd_line.fct_file_name, *argv, MAX_LENGTH );
 	  break;
 	case 'a': 
-	  sscanf( *argv, "%c", &gcmd_line.all_plans );
+	  sscanf( *argv, "%d", &gcmd_line.all_plans );
           break;
 	case 't':
-	  sscanf( *argv, "%c", &detect_transpositions );
+	  sscanf( *argv, "%d", &detect_transpositions );
 	  break;
 	case 'i':
 	  sscanf( *argv, "%d", &gcmd_line.display_info );
