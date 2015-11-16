@@ -75,7 +75,7 @@ static char * serrmsg[] = {
 };
 
 
-/* void fcterr( int errcode, char *par ); */
+void fcterr( int errcode, char *par );
 
 
 static int sact_err;
