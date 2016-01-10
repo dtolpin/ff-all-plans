@@ -723,7 +723,12 @@ int main( int argc, char *argv[] )
 
   } else {
     if(setjmp(this_sol)) {
-      usleep(gcmd_line.sleep_msecs*1000);
+      struct timespec timeout = {
+		  .tv_sec = gcmd_line.sleep_msecs / 1000,
+          .tv_nsec = (gcmd_line.sleep_msecs % 1000)*1000000
+        },
+        remainder;
+      nanosleep(&timeout, &remainder);
       print_plan();
       longjmp(next_sol, 1);
     } else if(!setjmp(no_sol))
