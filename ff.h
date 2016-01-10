@@ -69,8 +69,8 @@
 #include <strings.h>
 #include <ctype.h>
 #include <setjmp.h>
+#include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <sys/times.h>
 
 

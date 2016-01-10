@@ -1118,10 +1118,10 @@ void build_connectivity_graph( void )
   Bool *had_effects;
   ActionEffect *e, *e_, *e__;
 
-  struct timeb tp;
+  struct timespec tp;
 
-  ftime( &tp );
-  srandom( tp.millitm );
+  clock_gettime( CLOCK_REALTIME, &tp );
+  srandom( tp.tv_nsec );
 
   gnum_ft_conn = gnum_relevant_facts;
   gnum_op_conn = gnum_actions;
