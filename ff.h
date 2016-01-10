@@ -64,6 +64,7 @@
 
 
 
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <strings.h>
@@ -1482,4 +1483,4 @@ extern int detect_transpositions;
 
 
 
-#endif __FF_H
+#endif /* __FF_H */
