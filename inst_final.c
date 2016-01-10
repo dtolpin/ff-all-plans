@@ -1120,7 +1120,7 @@ void build_connectivity_graph( void )
 
   struct timespec tp;
 
-  clock_gettime( CLOCK_REALTIME, &tp );
+  clock_gettime( 0 /* CLOCK_REALTIME, linux is buggy */, &tp );
   srandom( tp.tv_nsec );
 
   gnum_ft_conn = gnum_relevant_facts;
