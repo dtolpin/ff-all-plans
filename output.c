@@ -758,20 +758,22 @@ void print_plan( void )
 
 {  
 
-  int i, ef, j;
+  int i;
 
   printf("\n\033[2J\033[H\nff: found legal plan as follows");
   printf("\n\nstep ");
   for ( i = 0; i < gnum_plan_ops; i++ ) {
-/*     printf("\n\nnstate:"); */
-/*     print_state(gplan_states[i]); */
+#if 0
+    int j, ef;
+    printf("\n\nnstate:"); 
+    print_state(gplan_states[i]); 
 
-/*     printf("\n\nprec:"); */
-/*     ef = gop_conn[gplan_ops[i]].E[0]; */
-/*     for ( j =0; j < gef_conn[ef].num_PC; j++ ) { */
-/*       print_ft_name(gef_conn[ef].PC[j]); */
-/*     } */
-
+    printf("\n\nprec:"); 
+    ef = gop_conn[gplan_ops[i]].E[0]; 
+    for ( j =0; j < gef_conn[ef].num_PC; j++ ) { 
+      print_ft_name(gef_conn[ef].PC[j]); 
+    } 
+#endif
     printf("%4d: ", i);
     print_op_name( gplan_ops[i] );
     printf("\n     ");
