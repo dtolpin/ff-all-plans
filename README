@@ -16,3 +16,10 @@ problem files.
 Have fun,
 
 Joerg Hoffmann
+
+----
+
+Modified by David Tolpin to 
+ 
+  * produce all plans
+  * support A* instead of greedy best first search
