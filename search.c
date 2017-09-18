@@ -887,13 +887,19 @@ void add_to_bfs_space( State *S, int op, BfsNode *father )
 {
 
   BfsNode *new, *i;
-  int h;
+  int g, h;
+  
+  g = father? father->S.g + 1 : 0;
 
   /* see if state is already a part of this search space
    */
   if ( detect_transpositions && bfs_state_hashed( S ) ) {
-    return;
+    if( S->g <= g ) /* always true with greedy search */
+      return;
   }
+
+  if( gcmd_line.astar )
+    S->g = g;
 
   h = get_1P( S, &ggoal_state );
 
@@ -902,7 +908,7 @@ void add_to_bfs_space( State *S, int op, BfsNode *father )
   }
 
   for ( i = lbfs_space_head; i->next; i = i->next ) {
-    if ( i->next->h > h ) break;
+    if ( i->next->S.g + i->next->h > S->g + h ) break;
   }
 
   new = new_BfsNode();
@@ -1023,6 +1029,7 @@ Bool bfs_state_hashed( State *S )
       continue;
     }
     if ( same_state( &(h->bfs_node->S), S ) ) {
+      S->g = h->bfs_node->S.g; /* copy distance from origin */
       return TRUE;
     }
   }
@@ -1178,7 +1185,6 @@ void source_to_dest( State *dest, State *source )
     dest->F[i] = source->F[i];
   }
   dest->num_F = source->num_F;
-
 }
 
 
@@ -1206,7 +1212,7 @@ void copy_source_to_dest( State *dest, State *source )
     dest->F[i] = source->F[i];
   }
   dest->num_F = source->num_F;
-
+  dest->g = source->g;
 }
 
 

@@ -857,6 +857,7 @@ void ff_usage( void )
   printf("-o <str>    operator file name\n");
   printf("-f <str>    fact file name\n\n");
   printf("-a <bool>   find all plans using best-first search (0)\n");
+  printf("-A <bool>   invokes A* instead of greedy search (0)\n");
   printf("-t <bool>   detect transpositions (1)\n");
   printf("-s <num>    sleep (milliseconds) between plans\n");
   printf("-i <num>    run-time information level( preset: 1 )\n");
@@ -941,6 +942,9 @@ Bool process_command_line( int argc, char *argv[] )
 	  break;
 	case 'a': 
 	  sscanf( *argv, "%d", &gcmd_line.all_plans );
+          break;
+        case 'A':
+          sscanf( *argv, "%d", &gcmd_line.astar );
           break;
 	case 't':
 	  sscanf( *argv, "%d", &detect_transpositions );

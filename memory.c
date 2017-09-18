@@ -620,6 +620,8 @@ void make_state( State *S, int n )
 
   S->F = ( int * ) calloc( n, sizeof( int ) );
   S->num_F = 0;
+  
+  S->g = 0; /* initialize distance from origin */
 
 }
 

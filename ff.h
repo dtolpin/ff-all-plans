@@ -361,6 +361,7 @@ struct _command_line {
   int display_info;
   int debug;
   int all_plans;
+  int astar;
   int sleep_msecs;
 };
 
@@ -994,6 +995,8 @@ typedef struct _State {
   int num_F;
 
   int max_F;
+  
+  int g;
 
 } State, *State_pointer;
 
